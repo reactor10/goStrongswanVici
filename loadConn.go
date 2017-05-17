@@ -16,11 +16,11 @@ type IKEConf struct {
 	Encap       string   `json:"encap"`   //yes,no
 	KeyingTries string   `json:"keyingtries"`
 	//	RekyTime   string                 `json:"rekey_time"`
-	DPDDelay   string                 `json:"dpd_delay,omitempty"`
-	LocalAuth  AuthConf               `json:"local"`
-	RemoteAuth AuthConf               `json:"remote"`
-	Pools      []string               `json:"pools,omitempty"`
-	Children   map[string]ChildSAConf `json:"children"`
+	DPDDelay   string                   `json:"dpd_delay,omitempty"`
+	LocalAuth  AuthConf                 `json:"local"`
+	RemoteAuth AuthConf                 `json:"remote"`
+	Pools      []string                 `json:"pools,omitempty"`
+	Children   []map[string]ChildSAConf `json:"children"`
 }
 
 type AuthConf struct {

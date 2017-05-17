@@ -237,11 +237,30 @@ func writeMap(w *bytes.Buffer, msg map[string]interface{}) (err error) {
 		case string:
 			writeKeyString(w, k, t)
 		case []interface{}:
-			str := make([]string, len(t))
-			for i := range t {
-				str[i] = t[i].(string)
+			if len(t) == 0 {
+				continue
 			}
-			writeKeyList(w, k, str)
+
+			switch t[0].(type) {
+			case string:
+
+				str := make([]string, len(t))
+				for i := range t {
+					str[i] = t[i].(string)
+				}
+				writeKeyList(w, k, str)
+			case map[string]interface{}:
+				// If the interface{} is actually a nested map[string]interface{}
+				// then we want to write the keyMap in the order that they are
+				// in the slice. This is necessary for the ordering of `children`
+				for _, nested := range t {
+					nestedVal := nested.(map[string]interface{})
+
+					for _ = range nestedVal {
+						writeKeyMap(w, k, nestedVal)
+					}
+				}
+			}
 		default:
 			return fmt.Errorf("[writeMap] can not write type %T right now", msg)
 		}
